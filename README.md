@@ -1,4 +1,5 @@
 Mongo
+Mongo [![Build Status](https://travis-ci.org/SimpliField/ansible-mongo.svg?branch=master)](https://travis-ci.org/SimpliField/ansible-mongo) [![Ansible Role](https://img.shields.io/ansible/role/9884.svg?maxAge=2592000)](https://galaxy.ansible.com/SimpliField/mongo/)
 =========
 
 Setup mongodb server
