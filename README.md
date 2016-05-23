@@ -12,6 +12,9 @@ Role Variables
 --------------
 
 ```yaml
+mongodb_storage_path: "/data/db"
+mongodb_user: "mongodb"
+mongodb_group: "mongodb"
 ```
 
 Dependencies
