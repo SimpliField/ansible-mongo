@@ -1,0 +1,44 @@
+---
+- name: add mongo GPG key into apt
+  apt_key:
+    keyserver: "keyserver.ubuntu.com"
+    id: "7F0CEB10"
+    state: present
+  tags:
+  - mongo
+
+- name: add apt repository
+  apt_repository:
+    repo: 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen'
+    state: present
+  tags:
+  - mongo
+
+- name: install mongodb
+  apt:
+    pkg: "{{item}}"
+    update-cache: yes
+  with_items:
+  - numactl
+  - mongodb-org
+  tags:
+  - mongo
+
+- name: create storage path
+  file:
+    path: "{{mongodb_storage_path}}"
+    state: "directory"
+    owner: "{{mongodb_user}}"
+    group: "{{mongodb_group}}"
+  tags:
+  - mongo
+
+- name: set mongodb storage path
+  lineinfile:
+    dest: "/etc/mongod.conf"
+    regexp: "^dbpath="
+    line: "dbpath=/data/db"
+  notify:
+  - restart mongodb
+  tags:
+  - mongo
