@@ -15,6 +15,8 @@ Role Variables
 mongodb_storage_path: "/data/db"
 mongodb_user: "mongodb"
 mongodb_group: "mongodb"
+# Support version 2.6, 3.0 and 3.2
+mongodb_version: 2.6
 ```
 
 Dependencies
