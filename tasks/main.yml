@@ -67,18 +67,17 @@
 
 - name: create storage path
   file:
-    path: "{{mongodb_storage_path}}"
+    path: "{{mongodb_db_path}}"
     state: "directory"
     owner: "{{mongodb_user}}"
     group: "{{mongodb_group}}"
   tags:
   - mongo
 
-- name: set mongodb storage path
-  lineinfile:
-    dest: "/etc/mongod.conf"
-    regexp: "^dbpath="
-    line: "dbpath=/data/db"
+- name: set mongodb config
+  template:
+    src: mongod.conf.j2
+    dest: /etc/mongod.conf
   notify:
   - restart mongodb
   tags:
