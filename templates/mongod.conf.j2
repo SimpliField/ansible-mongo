@@ -1,0 +1,13 @@
+systemLog:
+  destination: file
+  path: "/var/log/mongodb/mongod.log"
+  logAppend: true
+net:
+  bindIp: "{{ mongo_interfaces | join(',') }}"
+  port: 27017
+storage:
+  dbPath: "{{mongodb_db_path}}"
+{% if mongo_replication_set -%}
+replication:
+  replSetName: "{{mongo_replication_set}}"
+{%- endif %}
