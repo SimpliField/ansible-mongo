@@ -4,5 +4,5 @@ mongodb_user: "mongodb"
 mongodb_group: "mongodb"
 mongodb_version: 2.6
 mongo_replication_set: "rs0"
-mongodb_interfaces: ["127.0.0.1"]
+mongo_interfaces: ["127.0.0.1"]
 mongodb_db_path: "/data/db"
