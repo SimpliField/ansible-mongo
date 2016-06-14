@@ -12,9 +12,14 @@ Role Variables
 --------------
 
 ```yaml
-mongodb_storage_path: "/data/db"
+mongodb_db_path: "/data/db"
 mongodb_user: "mongodb"
 mongodb_group: "mongodb"
+# Support version 2.6, 3.0 and 3.2
+mongodb_version: 2.6
+mongo_replication_set: "myRs"
+# Bind mongo on differents ips
+mongo_interfaces: ["127.0.0.1", "10.0.0.1"]
 ```
 
 Dependencies

@@ -7,10 +7,51 @@
   tags:
   - mongo
 
-- name: add apt repository
+- name: add apt repository 2.6
   apt_repository:
     repo: 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen'
     state: present
+  when: mongodb_version == 2.6
+  tags:
+  - mongo
+
+- name: remove apt repository 2.6
+  apt_repository:
+    repo: 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen'
+    state: absent
+  when: mongodb_version != 2.6
+  tags:
+  - mongo
+
+- name: add apt repository 3.0
+  apt_repository:
+    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse"
+    state: present
+  when: mongodb_version == 3.0
+  tags:
+  - mongo
+
+- name: remove apt repository 3.0
+  apt_repository:
+    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse"
+    state: absent
+  when: mongodb_version != 3.0
+  tags:
+  - mongo
+
+- name: add apt repository 3.2
+  apt_repository:
+    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse"
+    state: present
+  when: mongodb_version == 3.2
+  tags:
+  - mongo
+
+- name: remove apt repository 3.2
+  apt_repository:
+    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse"
+    state: absent
+  when: mongodb_version != 3.2
   tags:
   - mongo
 
@@ -26,18 +67,17 @@
 
 - name: create storage path
   file:
-    path: "{{mongodb_storage_path}}"
+    path: "{{mongodb_db_path}}"
     state: "directory"
     owner: "{{mongodb_user}}"
     group: "{{mongodb_group}}"
   tags:
   - mongo
 
-- name: set mongodb storage path
-  lineinfile:
-    dest: "/etc/mongod.conf"
-    regexp: "^dbpath="
-    line: "dbpath=/data/db"
+- name: set mongodb config
+  template:
+    src: mongod.conf.j2
+    dest: /etc/mongod.conf
   notify:
   - restart mongodb
   tags:
