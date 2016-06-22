@@ -22,6 +22,11 @@ mongo_replication_set: "myRs"
 mongo_interfaces: ["127.0.0.1", "10.0.0.1"]
 ```
 
+If you want a single instance, to disable replica_set you can do :
+```yaml
+mongo_replication_set: !!null
+```
+
 Dependencies
 ------------
 
