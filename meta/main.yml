@@ -18,4 +18,5 @@ galaxy_info:
     - mongo
     - db
 
-dependencies: []
+dependencies:
+  - { role: SimpliField.transparent-huge-pages }
