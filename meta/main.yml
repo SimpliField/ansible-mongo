@@ -19,4 +19,4 @@ galaxy_info:
     - db
 
 dependencies:
-  - { role: SimpliField.transparent-huge-pages }
+- role: SimpliField.transparent-huge-pages
