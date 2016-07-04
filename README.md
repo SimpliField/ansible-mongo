@@ -38,7 +38,8 @@ Example Playbook
 ```
 - hosts: servers
   roles:
-  - { role: simplifield.mongo }
+  - role: simplifield.mongo
+```
 
 License
 -------
