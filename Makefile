@@ -1,5 +1,5 @@
-DOCKER_IMAGE?="sebastienelet/docker-debian8-ansible"
-DOCKER_INIT?=/lib/systemd/systemd
+DOCKER_IMAGE?="sebastienelet/docker-ubuntu1404-ansible"
+DOCKER_INIT?=/sbin/init
 docker-container-id:=$(shell mktemp)
 idempotence:=$(shell mktemp)
 
