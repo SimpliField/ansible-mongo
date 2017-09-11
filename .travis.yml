@@ -7,6 +7,7 @@ env:
     - DOCKER_IMAGE=sebastienelet/docker-ubuntu1404-ansible DOCKER_INIT=/sbin/init ROLE_OPTIONS="mongodb_version=2.6"
     - DOCKER_IMAGE=sebastienelet/docker-ubuntu1404-ansible DOCKER_INIT=/sbin/init ROLE_OPTIONS="mongodb_version=3.0"
     - DOCKER_IMAGE=sebastienelet/docker-ubuntu1404-ansible DOCKER_INIT=/sbin/init ROLE_OPTIONS="mongodb_version=3.2"
+    - DOCKER_IMAGE=sebastienelet/docker-ubuntu1404-ansible DOCKER_INIT=/sbin/init ROLE_OPTIONS="mongodb_version=3.4"
 
 before_install:
   - make docker-pull

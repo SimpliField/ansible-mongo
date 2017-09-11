@@ -7,6 +7,7 @@
   with_items:
     - "7F0CEB10"
     - "EA312927"
+    - "0C49F3730359A14518585931BC711F9BA15703C6"
   tags:
   - mongo
 
@@ -58,6 +59,23 @@
     repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse"
     state: absent
   when: mongodb_version != "3.2"
+  tags:
+  - mongo
+
+- name: add apt repository 3.4
+  apt_repository:
+    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.4 multiverse"
+    state: present
+  when: mongodb_version == "3.4"
+  register: mongodb_repo_added
+  tags:
+  - mongo
+
+- name: remove apt repository 3.4
+  apt_repository:
+    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.4 multiverse"
+    state: absent
+  when: mongodb_version != "3.4"
   tags:
   - mongo
 
