@@ -5,77 +5,60 @@
     id: "{{ item }}"
     state: present
   with_items:
-    - "7F0CEB10"
     - "EA312927"
     - "0C49F3730359A14518585931BC711F9BA15703C6"
-  tags:
-  - mongo
-
-- name: add apt repository 2.6
-  apt_repository:
-    repo: 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen'
-    state: present
-  when: mongodb_version == "2.6"
-  register: mongodb_repo_added
-  tags:
-  - mongo
-
-- name: remove apt repository 2.6
-  apt_repository:
-    repo: 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen'
-    state: absent
-  when: mongodb_version != "2.6"
-  tags:
-  - mongo
-
-- name: add apt repository 3.0
-  apt_repository:
-    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse"
-    state: present
-  when: mongodb_version == "3.0"
-  register: mongodb_repo_added
-  tags:
-  - mongo
-
-- name: remove apt repository 3.0
-  apt_repository:
-    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse"
-    state: absent
-  when: mongodb_version != "3.0"
+    - "2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5" # 3.6
   tags:
   - mongo
 
 - name: add apt repository 3.2
   apt_repository:
-    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse"
+    repo: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.2 multiverse"
     state: present
-  when: mongodb_version == "3.2"
+  when: mongodb_version == "3.2" and ansible_distribution == 'Ubuntu'
   register: mongodb_repo_added
   tags:
   - mongo
 
 - name: remove apt repository 3.2
   apt_repository:
-    repo: "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse"
+    repo: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.2 multiverse"
     state: absent
-  when: mongodb_version != "3.2"
+  when: mongodb_version != "3.2" and ansible_distribution == 'Ubuntu'
   tags:
   - mongo
 
 - name: add apt repository 3.4
   apt_repository:
-    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.4 multiverse"
+    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.4 multiverse"
     state: present
-  when: mongodb_version == "3.4"
+  when: mongodb_version == "3.4" and ansible_distribution == 'Ubuntu'
   register: mongodb_repo_added
   tags:
   - mongo
 
 - name: remove apt repository 3.4
   apt_repository:
-    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.4 multiverse"
+    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.4 multiverse"
     state: absent
-  when: mongodb_version != "3.4"
+  when: mongodb_version != "3.4" and ansible_distribution == 'Ubuntu'
+  tags:
+  - mongo
+
+- name: add apt repository 3.6
+  apt_repository:
+    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.6 multiverse"
+    state: present
+  when: mongodb_version == "3.6" and ansible_distribution == 'Ubuntu'
+  register: mongodb_repo_added
+  tags:
+  - mongo
+
+- name: remove apt repository 3.6
+  apt_repository:
+    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.6 multiverse"
+    state: absent
+  when: mongodb_version != "3.6" and ansible_distribution == 'Ubuntu'
   tags:
   - mongo
 
@@ -107,8 +90,30 @@
 - name: set mongodb config
   template:
     src: mongod.conf.j2
-    dest: /etc/mongod.conf
+    dest: /etc/mongo.conf
+  when: "ansible_service_mgr != 'systemd'"
   notify:
-  - restart mongodb
+  - restart mongodb initd
   tags:
   - mongo
+
+- name: "Setup MongoDb unit"
+  copy:
+    content: |
+      [Unit]
+      Description=High-performance, schema-free document-oriented database
+      After=network.target
+
+      [Service]
+      User=mongodb
+      ExecStart=/usr/bin/mongod --quiet --config /etc/mongod.conf
+
+      [Install]
+      WantedBy=multi-user.target
+    dest: /etc/systemd/system/mongo.service
+  when: "ansible_service_mgr == 'systemd'"
+  notify:
+  - restart mongodb systemd
+  tags:
+  - mongo
+

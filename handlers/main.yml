@@ -1,5 +1,11 @@
 ---
-- name: restart mongodb
+- name: restart mongodb initd
   service:
     name: "mongod"
     state: restarted
+
+- name: restart mongodb systemd
+  service:
+    name: "mongo"
+    state: "restarted"
+    enabled: True
