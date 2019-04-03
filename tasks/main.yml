@@ -90,7 +90,7 @@
 - name: set mongodb config
   template:
     src: mongod.conf.j2
-    dest: /etc/mongo.conf
+    dest: /etc/mongod.conf
   when: "ansible_service_mgr != 'systemd'"
   notify:
   - restart mongodb initd
