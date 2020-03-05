@@ -4,9 +4,8 @@ services:
 
 env:
   matrix:
-    - DOCKER_IMAGE=sebastienelet/docker-ubuntu1404-ansible DOCKER_INIT=/sbin/init ROLE_OPTIONS="mongodb_version=3.2"
-    - DOCKER_IMAGE=sebastienelet/docker-ubuntu1404-ansible DOCKER_INIT=/sbin/init ROLE_OPTIONS="mongodb_version=3.4"
-    - DOCKER_IMAGE=sebastienelet/docker-ubuntu1404-ansible DOCKER_INIT=/sbin/init ROLE_OPTIONS="mongodb_version=3.6"
+    - ROLE_OPTIONS="mongodb_version=4.0"
+    - ROLE_OPTIONS="mongodb_version=4.2"
 
 before_install:
   - make docker-pull
