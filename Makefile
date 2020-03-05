@@ -21,7 +21,7 @@ docker-stop:
 docker-test: docker-requirements docker-test-syntax docker-test-role docker-test-role-idempotence
 
 docker-requirements:
-	docker exec "$(shell cat ${docker-container-id})" ansible-galaxy install simplifield.transparent-huge-pages && apt -y dirmngr
+	docker exec "$(shell cat ${docker-container-id})" ansible-galaxy install simplifield.transparent-huge-pages && apt install -y dirmngr
 docker-test-syntax:
 	docker exec --tty "$(shell cat ${docker-container-id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check
 docker-test-role:
