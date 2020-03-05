@@ -1,4 +1,4 @@
-DOCKER_IMAGE?="ansible/ansible"
+DOCKER_IMAGE?="geerlingguy/docker-ubuntu1804-ansible:python2"
 DOCKER_INIT?=/sbin/init
 docker-container-id:=$(shell mktemp)
 idempotence:=$(shell mktemp)
