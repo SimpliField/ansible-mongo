@@ -1,4 +1,4 @@
-DOCKER_IMAGE?="sebastienelet/docker-ubuntu1404-ansible"
+DOCKER_IMAGE?="geerlingguy/docker-ubuntu1804-ansible:python2"
 DOCKER_INIT?=/sbin/init
 docker-container-id:=$(shell mktemp)
 idempotence:=$(shell mktemp)
@@ -21,7 +21,7 @@ docker-stop:
 docker-test: docker-requirements docker-test-syntax docker-test-role docker-test-role-idempotence
 
 docker-requirements:
-	docker exec "$(shell cat ${docker-container-id})" ansible-galaxy install SimpliField.transparent-huge-pages
+	docker exec "$(shell cat ${docker-container-id})" ansible-galaxy install simplifield.transparent-huge-pages && sudo apt update && sudo apt install -y dirmngr
 docker-test-syntax:
 	docker exec --tty "$(shell cat ${docker-container-id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check
 docker-test-role:

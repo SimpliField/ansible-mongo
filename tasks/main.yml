@@ -1,91 +1,111 @@
 ---
 - name: add mongo GPG key into apt
   apt_key:
-    keyserver: "keyserver.ubuntu.com"
-    id: "{{ item }}"
+    keyserver: 'keyserver.ubuntu.com'
+    id: '{{ item }}'
     state: present
   with_items:
-    - "EA312927"
-    - "0C49F3730359A14518585931BC711F9BA15703C6"
-    - "2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5" # 3.6
+    - 'EA312927'
+    - '0C49F3730359A14518585931BC711F9BA15703C6'
+    - '2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5' # 3.6
+    - '4B7C549A058F8B6B' # 4.2
   tags:
-  - mongo
+    - mongo
 
 - name: add apt repository 3.2
   apt_repository:
-    repo: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.2 multiverse"
+    repo: 'deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.2 multiverse'
     state: present
   when: mongodb_version == "3.2" and ansible_distribution == 'Ubuntu'
   register: mongodb_repo_added
   tags:
-  - mongo
+    - mongo
 
 - name: remove apt repository 3.2
   apt_repository:
-    repo: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.2 multiverse"
+    repo: 'deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.2 multiverse'
     state: absent
   when: mongodb_version != "3.2" and ansible_distribution == 'Ubuntu'
   tags:
-  - mongo
+    - mongo
 
 - name: add apt repository 3.4
   apt_repository:
-    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.4 multiverse"
+    repo: 'deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.4 multiverse'
     state: present
   when: mongodb_version == "3.4" and ansible_distribution == 'Ubuntu'
   register: mongodb_repo_added
   tags:
-  - mongo
+    - mongo
 
 - name: remove apt repository 3.4
   apt_repository:
-    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.4 multiverse"
+    repo: 'deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.4 multiverse'
     state: absent
   when: mongodb_version != "3.4" and ansible_distribution == 'Ubuntu'
   tags:
-  - mongo
+    - mongo
 
 - name: add apt repository 3.6
   apt_repository:
-    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.6 multiverse"
+    repo: 'deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.6 multiverse'
     state: present
   when: mongodb_version == "3.6" and ansible_distribution == 'Ubuntu'
   register: mongodb_repo_added
   tags:
-  - mongo
+    - mongo
 
 - name: remove apt repository 3.6
   apt_repository:
-    repo: "deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.6 multiverse"
+    repo: 'deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/3.6 multiverse'
     state: absent
   when: mongodb_version != "3.6" and ansible_distribution == 'Ubuntu'
   tags:
-  - mongo
+    - mongo
+
+- name: add apt repository 4.2
+  apt_repository:
+    repo: 'deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/4.2 multiverse'
+    state: present
+  when: mongodb_version == "4.2" and ansible_distribution == 'Ubuntu'
+  register: mongodb_repo_added
+  tags:
+    - mongo
+
+- name: remove apt repository 4.2
+  apt_repository:
+    repo: 'deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release}}/mongodb-org/4.2 multiverse'
+    state: absent
+  when: mongodb_version != "4.2" and ansible_distribution == 'Ubuntu'
+  tags:
+    - mongo
 
 - name: apt update cache
   apt:
     update_cache: yes
   when: mongodb_repo_added.changed
   tags:
-  - mongo
+    - mongo
+
+- name: uninstall mongodb
+  apt:
+    name: 'mongodb-org'
+    state: absent
 
 - name: install mongodb
   apt:
-    pkg: "{{item}}"
-  with_items:
-  - numactl
-  - mongodb-org
+    pkg: ['numactl', 'mongodb-org']
   tags:
-  - mongo
+    - mongo
 
 - name: create storage path
   file:
-    path: "{{mongodb_db_path}}"
-    state: "directory"
-    owner: "{{mongodb_user}}"
-    group: "{{mongodb_group}}"
+    path: '{{mongodb_db_path}}'
+    state: 'directory'
+    owner: '{{mongodb_user}}'
+    group: '{{mongodb_group}}'
   tags:
-  - mongo
+    - mongo
 
 - name: set mongodb config
   template:
@@ -93,11 +113,11 @@
     dest: /etc/mongod.conf
   when: "ansible_service_mgr != 'systemd'"
   notify:
-  - restart mongodb initd
+    - restart mongodb initd
   tags:
-  - mongo
+    - mongo
 
-- name: "Setup MongoDb unit"
+- name: 'Setup MongoDb unit'
   copy:
     content: |
       [Unit]
@@ -113,7 +133,6 @@
     dest: /etc/systemd/system/mongo.service
   when: "ansible_service_mgr == 'systemd'"
   notify:
-  - restart mongodb systemd
+    - restart mongodb systemd
   tags:
-  - mongo
-
+    - mongo
